@@ -8,32 +8,35 @@ const {
   deleteStudent,
 } = require('../controllers/studentController');
 const { protect } = require('../middleware/authMiddleware');
-const { authorizeRoles } = require('../middleware/roleMiddleware');
+
+// Protect all routes using auth middleware
+router.use(protect);
 
 // @route   POST /api/students
 // @desc    Create student profile
-// @access  Private/Admin
+// @access  Private
 // @route   GET /api/students
 // @desc    Get all students
-// @access  Private/Admin/Teacher
+// @access  Private
 router
   .route('/')
-  .post(protect, authorizeRoles('admin'), createStudent)
-  .get(protect, authorizeRoles('admin', 'teacher'), getStudents);
+  .post(createStudent)
+  .get(getStudents);
 
 // @route   GET /api/students/:id
 // @desc    Get student by ID
 // @access  Private
 // @route   PUT /api/students/:id
 // @desc    Update student profile
-// @access  Private/Admin/Student
+// @access  Private
 // @route   DELETE /api/students/:id
 // @desc    Delete student profile
-// @access  Private/Admin
+// @access  Private
 router
   .route('/:id')
-  .get(protect, getStudentById)
-  .put(protect, authorizeRoles('admin', 'student'), updateStudent)
-  .delete(protect, authorizeRoles('admin'), deleteStudent);
+  .get(getStudentById)
+  .put(updateStudent)
+  .delete(deleteStudent);
 
 module.exports = router;
+
