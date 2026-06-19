@@ -2,19 +2,15 @@ const mongoose = require('mongoose');
 
 const enrollmentSchema = new mongoose.Schema(
   {
-    student: {
+    studentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Student',
       required: true,
     },
-    course: {
+    courseId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Course',
       required: true,
-    },
-    enrollmentDate: {
-      type: Date,
-      default: Date.now,
     },
     grade: {
       type: String,
@@ -22,8 +18,8 @@ const enrollmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['enrolled', 'completed', 'dropped'],
-      default: 'enrolled',
+      enum: ['Enrolled', 'Completed', 'Dropped'],
+      default: 'Enrolled',
     },
   },
   {
@@ -32,6 +28,6 @@ const enrollmentSchema = new mongoose.Schema(
 );
 
 // Ensure a student cannot be enrolled in the same course multiple times
-enrollmentSchema.index({ student: 1, course: 1 }, { unique: true });
+enrollmentSchema.index({ studentId: 1, courseId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Enrollment', enrollmentSchema);
