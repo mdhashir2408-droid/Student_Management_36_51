@@ -33,11 +33,25 @@ const createStudent = async (req, res) => {
 };
 
 // @route   GET /api/students
-// @desc    Get all students
+// @desc    Get all students (supports filtering by enrollmentNo, department, semester)
 // @access  Private
 const getStudents = async (req, res) => {
   try {
-    const students = await Student.find({});
+    const queryObject = {};
+
+    if (req.query.enrollmentNo) {
+      queryObject.enrollmentNo = req.query.enrollmentNo;
+    }
+
+    if (req.query.department) {
+      queryObject.department = req.query.department;
+    }
+
+    if (req.query.semester) {
+      queryObject.semester = req.query.semester;
+    }
+
+    const students = await Student.find(queryObject);
     res.status(200).json(students);
   } catch (error) {
     res.status(500).json({ message: error.message });
