@@ -1,0 +1,35 @@
+const jwt = require('jsonwebtoken');
+
+/**
+ * Authentication middleware to protect routes and verify JWT tokens
+ */
+const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      // Get token from header
+      token = req.headers.authorization.split(' ')[1];
+
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+
+      // Attach user ID/info to request object (placeholder user object)
+      req.user = { id: decoded.id };
+
+      return next();
+    } catch (error) {
+      console.error('Auth Error:', error.message);
+      return res.status(401).json({ message: 'Not authorized, token failed' });
+    }
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: 'Not authorized, no token' });
+  }
+};
+
+module.exports = { protect };
