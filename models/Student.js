@@ -2,24 +2,33 @@ const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    registrationNumber: {
+    enrollmentNo: {
       type: String,
-      required: true,
+      required: [true, 'Enrollment number is required'],
       unique: true,
     },
-    major: {
+    rollNo: {
       type: String,
-      required: true,
     },
-    status: {
+    name: {
       type: String,
-      enum: ['active', 'inactive', 'suspended', 'graduated'],
-      default: 'active',
+      required: [true, 'Student name is required'],
+    },
+    department: {
+      type: String,
+    },
+    semester: {
+      type: String,
+    },
+    email: {
+      type: String,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        'Please add a valid email',
+      ],
+    },
+    phone: {
+      type: String,
     },
   },
   {
@@ -28,3 +37,4 @@ const studentSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model('Student', studentSchema);
+
