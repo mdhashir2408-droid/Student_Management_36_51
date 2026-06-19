@@ -6,6 +6,8 @@ const {
   getEnrollmentById,
   updateEnrollment,
   dropCourse,
+  getEnrollmentsByStudent,
+  getEnrollmentsByCourse,
 } = require('../controllers/enrollmentController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
@@ -20,6 +22,20 @@ router
   .route('/')
   .post(protect, enrollStudent)
   .get(protect, authorizeRoles('admin', 'teacher'), getEnrollments);
+
+// @route   GET /api/enrollments/student/:studentId
+// @desc    Get all courses enrolled by a specific student
+// @access  Private
+router
+  .route('/student/:studentId')
+  .get(protect, getEnrollmentsByStudent);
+
+// @route   GET /api/enrollments/course/:courseId
+// @desc    Get all students enrolled in a specific course
+// @access  Private/Admin/Teacher
+router
+  .route('/course/:courseId')
+  .get(protect, authorizeRoles('admin', 'teacher'), getEnrollmentsByCourse);
 
 // @route   GET /api/enrollments/:id
 // @desc    Get enrollment by ID
