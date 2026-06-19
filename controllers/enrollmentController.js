@@ -100,10 +100,32 @@ const dropCourse = async (req, res) => {
   }
 };
 
+// Get all enrollments/courses for a specific student
+const getEnrollmentsByStudent = async (req, res) => {
+  try {
+    const enrollments = await Enrollment.find({ studentId: req.params.studentId }).populate('courseId');
+    res.status(200).json(enrollments);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get all enrollments/students for a specific course
+const getEnrollmentsByCourse = async (req, res) => {
+  try {
+    const enrollments = await Enrollment.find({ courseId: req.params.courseId }).populate('studentId');
+    res.status(200).json(enrollments);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   enrollStudent,
   getEnrollments,
   getEnrollmentById,
   updateEnrollment,
   dropCourse,
+  getEnrollmentsByStudent,
+  getEnrollmentsByCourse,
 };
